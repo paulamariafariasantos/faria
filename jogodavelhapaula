@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha da Paula</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffccff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            background-color: #ff99cc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            color: #ff33cc;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .cell:hover {
+            background-color: #ff66b2;
+        }
+
+        .cell.x {
+            color: #ff33cc;
+        }
+
+        .cell.o {
+            color: #ff66b2;
+        }
+
+        .restart {
+            background-color: #ff33cc;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .restart:hover {
+            background-color: #ff1f99;
+        }
+
+        .message {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #ff33cc;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <div class="game-board" id="game-board">
+            <div class="cell" onclick="makeMove(0)"></div>
+            <div class="cell" onclick="makeMove(1)"></div>
+            <div class="cell" onclick="makeMove(2)"></div>
+            <div class="cell" onclick="makeMove(3)"></div>
+            <div class="cell" onclick="makeMove(4)"></div>
+            <div class="cell" onclick="makeMove(5)"></div>
+            <div class="cell" onclick="makeMove(6)"></div>
+            <div class="cell" onclick="makeMove(7)"></div>
+            <div class="cell" onclick="makeMove(8)"></div>
+        </div>
+        <button class="restart" onclick="restartGame()">Reiniciar Jogo</button>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let currentPlayer = 'X';
+        let gameOver = false;
+
+        function makeMove(index) {
+            if (gameOver || board[index] !== '') return;
+            board[index] = currentPlayer;
+            document.getElementsByClassName('cell')[index].textContent = currentPlayer;
+            checkWinner();
+            currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
+        }
+
+        function checkWinner() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+                [0, 4, 8], [2, 4, 6] 
+            ];
+
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    document.getElementById('message').textContent = `Jogador ${board[a]} venceu!`;
+                    gameOver = true;
+                    return;
+                }
+            }
+
+            if (!board.includes('')) {
+                document.getElementById('message').textContent = 'Empate!';
+                gameOver = true;
+            }
+        }
+
+        function restartGame() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            currentPlayer = 'X';
+            gameOver = false;
+            document.getElementById('message').textContent = '';
+            const cells = document.getElementsByClassName('cell');
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].textContent = '';
+            }
+        }
+    </script>
+
+</body>
+</html>
